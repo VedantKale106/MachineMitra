@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Machine Mitra </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/c067ba90b4.js" crossorigin="anonymous"></script>
+    <style>
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            color: #6170b9;
+        }
+
+        input[type="file"],
+        select,
+        input[type="submit"],
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            cursor: pointer;
+            width: auto;
+        }
+
+        h2 {
+            font-size: 24px;
+
+        }
+
+        legend {
+            font-size: 20px;
+            color: #0000008a;
+        }
+
+        .card {
+            border: 0;
+            margin: 20px;
+            padding: 16px;
+            border-radius: 20px;
+        }
+
+        .card:before {
+            content: "";
+            background: linear-gradient(45deg,
+                    #ff0000,
+                    #ff7300,
+                    #fffb00,
+                    #48ff00,
+                    #00ffd5,
+                    #002bff,
+                    #7a00ff,
+                    #ff00c8,
+                    #ff0000);
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            width: calc(100% + 1px);
+            height: calc(100% + 1px);
+            animation: glowing-button-85 20s linear infinite;
+            transition: opacity 0.3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        @keyframes glowing-button-85 {
+            0% {
+                background-position: 0 0;
+            }
+
+            50% {
+                background-position: 400% 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        .card:after {
+            z-index: -1;
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #efeff3;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        .button-80 {
+            background: #fff;
+            backface-visibility: hidden;
+            border-radius: .375rem;
+            border-style: solid;
+            border-width: .125rem;
+            box-sizing: border-box;
+            color: #212121;
+            cursor: pointer;
+            display: inline-block;
+            font-family: Circular, Helvetica, sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -.01em;
+            line-height: 1.3;
+            padding: .5rem .75rem;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            transform: translateZ(0) scale(1);
+            transition: transform .2s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .button-80:not(:disabled):hover {
+            transform: scale(1.05);
+        }
+
+        .button-80:not(:disabled):hover:active {
+            transform: scale(1.05) translateY(.125rem);
+        }
+
+        .button-80:focus {
+            outline: 0 solid transparent;
+        }
+
+        .button-80:focus:before {
+            content: "";
+            left: calc(-1*.375rem);
+            pointer-events: none;
+            position: absolute;
+            top: calc(-1*.375rem);
+            transition: border-radius;
+            user-select: none;
+        }
+
+        .button-80:focus:not(:focus-visible) {
+            outline: 0 solid transparent;
+        }
+
+        .button-80:focus:not(:focus-visible):before {
+            border-width: 0;
+        }
+
+        .button-80:not(:disabled):active {
+            transform: translateY(.125rem);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="text-right mr-3" style="font-size: 20px;">
+        <i class="fa-solid fa-book"><a style="color: rgb(0, 0, 0); font-family: 'Times New Roman', Times, serif; font-weight: bold; " href="{{ url_for('user_manual') }}"> User Manual</a></i>
+      </div>
+    <h1 class="mb-4 mt-5  text-black"> 
+        <a style="color: rgb(0, 0, 0); font-family: 'Times New Roman', Times, serif; font-weight: bold;" href="{{ url_for('about') }}">Wecome to Machine Mitra </a>
+    </h1>
+    <div class="container">
+        <div class="row d-flex flex-row justify-content-center">
+
+            <!-- Upload file section -->
+            <div class="col-sm-12 col-md-12 card">
+                <h2>Upload Dataset</h2>
+                <form method="post" enctype="multipart/form-data">
+                    <input type="file" name="upload_file" accept=".csv">
+                    <input type="submit" class="btn button-80 btn-warning" value="Upload CSV">
+                </form>
+            </div>
+
+            <!-- select features section -->
+            <div class="col-sm-12 col-md-5 card ml-auto">
+                <h2>Select Features and Target Column</h2>
+                <form method="post">
+                    {% if columns %}
+                    <fieldset>
+                        <legend>Select Features:</legend>
+                        {% for col in columns %}
+                        <input type="checkbox" name="features" value="{{ col }}" {% if col in selected_features
+                            %}checked{% endif %}>
+                        <label for="features">{{ col }}</label><br>
+                        {% endfor %}
+                    </fieldset>
+                    <fieldset>
+                        <legend>Select Target Column:</legend>
+                        <label for="target">Select Target Column:</label>
+                        <select name="target" id="target">
+                            {% for col in columns %}
+                            <option value="{{ col }}" {% if col==target_column %}selected{% endif %}>{{ col }}</option>
+                            {% endfor %}
+                        </select>
+                    </fieldset>
+                    <input type="submit" class="btn button-80 btn-info mr-1" name="select_features"
+                        value="Select Features">
+                    <input type="submit" class="btn button-80 btn-info ml-1" name="target_column"
+                        value="Set Target Column"><br />
+                    {% endif %}
+                </form>
+            </div>
+
+            <!-- Train Model section-->
+            <div class="col-sm-12 col-md-5 card mr-auto">
+                <h2>Train Model</h2>
+                <form method="post">
+                    <fieldset>
+                        <legend>Select Model Type:</legend>
+                        <label for="model_type">Select Model Type:</label>
+                        <select name="model_type" id="model_type">
+                            <option value="LinearRegression" {% if model_name=='Linear Regression' %}selected{% endif
+                                %}>Linear Regression</option>
+                            <option value="RandomForest" {% if model_name=='Random Forest' %}selected{% endif %}>Random
+                                Forest</option>
+                            <option value="GradientBoosting" {% if model_name=='Gradient Boosting' %}selected{% endif
+                                %}>Gradient Boosting</option>
+                            <option value="DecisionTree" {% if model_name=='Decision Tree' %}selected{% endif %}>
+                                Decision Tree</option>
+                        </select>
+                    </fieldset>
+                    <input type="submit" class="btn button-80 btn-success" name="train_model" value="Train Model">
+                </form>
+
+                {% if model_name %}
+                <h2>Model Information</h2>
+                <p>Model Name: {{ model_name }}</p>
+                <p>Model Score: {{ model_score }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <!-- provide example input section -->
+            <div class="col-sm-12 card">
+                <h2>Provide Example Input</h2>
+                <form method="post">
+                    {% for col in selected_features %}
+                    <label for="input_{{ col }}">{{ col }}:</label>
+                    <input type="text" id="input_{{ col }}" name="input_{{ col }}">
+                    {% endfor %}
+                    <br />
+                    <input type="submit" class="btn button-80 btn-info" name="example_input" value="Predict">
+                </form>
+
+                {% if prediction is not none %}
+                <h2>Prediction Result</h2>
+                <p>Prediction: {{ prediction }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Export section-->
+            <!-- Export section-->
+            <div class="col-sm-12 card">
+                <h2>Export</h2>
+                <form method="post">
+                    <input type="submit" class="btn button-80 btn-success mr-1" name="export_model"
+                        value="Export Model">
+                    <input type="submit" class="btn button-80 btn-success ml-1" name="export_encoders_scalers"
+                        value="Export Encoders">
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+    <footer>
+        <p class="text-center">&copy; 2024 MachineMitra</p>
+    </footer>
+</body>
+
+</html>
