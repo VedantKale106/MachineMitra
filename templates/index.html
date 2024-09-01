@@ -165,10 +165,13 @@
 <body>
 
     <div class="text-right mr-3" style="font-size: 20px;">
-        <i class="fa-solid fa-book"><a style="color: rgb(0, 0, 0); font-family: 'Times New Roman', Times, serif; font-weight: bold; " href="{{ url_for('user_manual') }}"> User Manual</a></i>
-      </div>
-    <h1 class="mb-4 mt-5  text-black"> 
-        <a style="color: rgb(0, 0, 0); font-family: 'Times New Roman', Times, serif; font-weight: bold;" href="{{ url_for('about') }}">Wecome to Machine Mitra </a>
+        <i class="fa-solid fa-book"><a
+                style="color: rgb(0, 0, 0); font-family: 'Times New Roman', Times, serif; font-weight: bold; "
+                href="{{ url_for('user_manual') }}"> User Manual</a></i>
+    </div>
+    <h1 class="mb-4 mt-5  text-black">
+        <a style="color: rgb(0, 0, 0); font-family: 'Times New Roman', Times, serif; font-weight: bold;"
+            href="{{ url_for('about') }}">Wecome to Machine Mitra </a>
     </h1>
     <div class="container">
         <div class="row d-flex flex-row justify-content-center">
@@ -183,6 +186,7 @@
             </div>
 
             <!-- select features section -->
+            <!-- select features and target column section -->
             <div class="col-sm-12 col-md-5 card ml-auto">
                 <h2>Select Features and Target Column</h2>
                 <form method="post">
@@ -204,13 +208,12 @@
                             {% endfor %}
                         </select>
                     </fieldset>
-                    <input type="submit" class="btn button-80 btn-info mr-1" name="select_features"
-                        value="Select Features">
-                    <input type="submit" class="btn button-80 btn-info ml-1" name="target_column"
-                        value="Set Target Column"><br />
+                    <input type="submit" class="btn button-80 btn-info" name="update_features_target"
+                        value="Update Features and Target">
                     {% endif %}
                 </form>
             </div>
+
 
             <!-- Train Model section-->
             <div class="col-sm-12 col-md-5 card mr-auto">
@@ -228,6 +231,24 @@
                                 %}>Gradient Boosting</option>
                             <option value="DecisionTree" {% if model_name=='Decision Tree' %}selected{% endif %}>
                                 Decision Tree</option>
+                            <option value="SVR" {% if model_name=='Support Vector Regressor' %}selected{% endif %}>
+                                Support Vector Regressor</option>
+                            <option value="KNeighbors" {% if model_name=='K-Nearest Neighbors' %}selected{% endif %}>
+                                K-Nearest Neighbors</option>
+                            <option value="AdaBoost" {% if model_name=='AdaBoost Regressor' %}selected{% endif %}>
+                                AdaBoost Regressor</option>
+                            <option value="Lasso" {% if model_name=='Lasso Regression' %}selected{% endif %}>Lasso
+                                Regression</option>
+                            <option value="Ridge" {% if model_name=='Ridge Regression' %}selected{% endif %}>Ridge
+                                Regression</option>
+                            <option value="ElasticNet" {% if model_name=='Elastic Net' %}selected{% endif %}>Elastic Net
+                            </option>
+                            <option value="ExtraTrees" {% if model_name=='Extra Trees Regressor' %}selected{% endif %}>
+                                Extra Trees Regressor</option>
+                            <option value="HistGradientBoosting" {% if model_name=='Histogram-Based Gradient Boosting'
+                                %}selected{% endif %}>Histogram-Based Gradient Boosting</option>
+
+
                         </select>
                     </fieldset>
                     <input type="submit" class="btn button-80 btn-success" name="train_model" value="Train Model">
@@ -259,7 +280,9 @@
                 {% if prediction is not none %}
                 <h2>Prediction Result</h2>
                 <p>Prediction: {{ prediction }}</p>
+                <p>Model Used: {{ prediction_model }}</p>
                 {% endif %}
+
             </div>
 
             <!-- Export section-->
